@@ -1,0 +1,56 @@
+<snippet>
+	<content><![CDATA[
+class node{
+	node *left,*rght;
+	int l,r;
+	double d1=1,d2=0;
+	double v;
+	bool stale=false;
+	double calc(){
+		if(l<r){
+			left->apply(d1,d2);
+			rght->apply(d1,d2);
+		}
+		v = stale ? left->calc()+rght->calc() : v*d1+d2*(r-l+1); //lazzyyyy
+		d1=1;d2=0;
+		stale=false;
+		return v;
+	}
+	void apply(double v1,double v2){
+		d1*=v1;
+		d2=d2*v1+v2;
+	}
+public:
+	double query(int ql,int qr){
+		if(ql>r || qr<l) return 0;
+		calc();
+		if(ql<=l && r<=qr) return v;
+		return left->query(ql,qr)+rght->query(ql,qr);
+	}
+	void upd(int ql,int qr,double v1,double v2){
+		if(l>qr || r<ql) return;
+		if(ql<=l && r<=qr){
+			apply(v1,v2);
+			return;
+		}
+		stale=true;
+		left->upd(ql,qr,v1,v2);
+		rght->upd(ql,qr,v1,v2);
+	}
+	node(int l,int r,double *src):l(l),r(r) {
+		if(l==r){
+			v=src[l];
+			return;
+		}
+		int mid=(l+r)/2;
+		left=new node(l,mid,src);
+		rght=new node(mid+1,r,src);
+		v=left->v+rght->v;
+	}
+};
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<!-- <tabTrigger>hello</tabTrigger> -->
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

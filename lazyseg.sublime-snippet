@@ -1,0 +1,56 @@
+<snippet>
+	<content><![CDATA[
+int N=111111;
+int t[N*2];
+
+int h = sizeof(int) * 8 - __builtin_clz(N);
+int d[N];
+
+void apply(int p, int v) {
+  t[p] += v;
+  if (p < N) d[p] += v;
+}
+
+void build(int p) {
+  while (p > 1) p >>= 1, t[p] = max(t[p<<1], t[p<<1|1]) + d[p];
+}
+
+void push(int p) {
+  for (int s = h; s > 0; --s) {
+    int i = p >> s;
+    if (d[i] != 0) {
+      apply(i<<1, d[i]);
+      apply(i<<1|1, d[i]);
+      d[i] = 0;
+    }
+  }
+}
+
+void inc(int l, int r, int v) {
+  l += N, r += N;
+  int l0 = l, r0 = r;
+  for (; l < r; l >>= 1, r >>= 1) {
+    if (l&1) apply(l++, v);
+    if (r&1) apply(--r, v);
+  }
+  build(l0);
+  build(r0 - 1);
+}
+
+int query(int l, int r) {
+  l += N, r += N;
+  push(l);
+  push(r - 1);
+  int res = -2e9;
+  for (; l < r; l >>= 1, r >>= 1) {
+    if (l&1) res = max(res, t[l++]);
+    if (r&1) res = max(t[--r], res);
+  }
+  return res;
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<!-- <tabTrigger>hello</tabTrigger> -->
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

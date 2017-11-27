@@ -1,0 +1,24 @@
+<snippet>
+	<content><![CDATA[
+int N=111111;
+int t[N*2];
+void build(){
+	for(int i = N; --i;) t[i] = max(t[i*2], t[i*2 + 1]);
+}
+void modify(int p, int v){  // set value at position p
+	for(t[p += N] = v; p /= 2;) t[p] = max(t[p*2], t[p*2 + 1]);
+}
+int query(int l, int r){  // sum on interval [l, r)
+  int res = 0;
+  for (l += N, r += N; l < r; l /= 2, r /= 2) {
+    if (l&1) res = max(res, t[l++]);
+    if (r&1) res = max(res, t[--r]);
+  }
+  return res;
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<!-- <tabTrigger>hello</tabTrigger> -->
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

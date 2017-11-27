@@ -1,0 +1,43 @@
+<snippet>
+	<content><![CDATA[
+struct node{
+	node *left,*rght;
+	ll l,r;
+	ll d;
+	ll minval;
+	ll query(ll ql,ll qr){
+		if(ql>r || qr<l) return INT_MAX;
+		if(ql<=l && r<=qr) return minval;
+		return min(left->query(ql,qr),rght->query(ql,qr));
+	}
+	node * upd(ll pos,ll val,ll t){
+		if(l>pos || r<pos) return this;
+		if(t>d){
+			node *ans=new node(*this);
+			ans->d=t;
+			return ans->upd(pos,val,t);
+		}
+		if(l==r){
+			minval=val;
+			return this;
+		}
+		left=left->upd(pos,val,t);
+		rght=rght->upd(pos,val,t);
+		minval=min(val,minval);
+		return this;
+	}
+	node(ll l,ll r,ll d):l(l),r(r),d(d),minval{INT_MAX} {
+		if(l==r) return;
+		ll mid=(l+r)/2;
+		left=new node(l,mid,d);
+		rght=new node(mid+1,r,d);
+	}
+};
+
+vector<node*> heads;
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<!-- <tabTrigger>hello</tabTrigger> -->
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

@@ -1,0 +1,38 @@
+<snippet>
+	<content><![CDATA[
+const int L=17,N=1<<L; //131072
+int pp[L][N];
+int *p=pp[0];
+int d[N];
+vector<int> adj[N];
+
+void dfs1(int u,int _p=-1,int _d=0){
+	p[u]=_p;
+	d[u]=_d;
+	for(int i=1;i<L;i++){
+		if(pp[i-1][u]!=-1) pp[i][u]=pp[i-1][pp[i-1][u]];
+		else pp[i][u]=-1;
+	}
+	for(int v:adj[u]) if(v!=_p) dfs1(v,u,_d+1);
+}
+
+int lca(int u,int v){
+	if(d[u]>d[v]) swap(u,v);
+	for(int i=L;i--;){
+		if(d[u]<=d[v]-(1<<i)) v=pp[i][v];
+	}
+	if(u==v) return u;
+	for(int i=L;i--;) if(pp[i][u]!=pp[i][v]) u=pp[i][u],v=pp[i][v];
+	return p[u];
+}
+
+int dist(int u,int v,int w=-1){
+	if(w==-1) w=lca(u,v);
+	return d[u]+d[v]-2*d[w];
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<!-- <tabTrigger>hello</tabTrigger> -->
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>
