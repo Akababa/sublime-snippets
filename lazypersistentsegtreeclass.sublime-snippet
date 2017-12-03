@@ -1,5 +1,6 @@
 <snippet>
 	<content><![CDATA[
+/* NOT TESTED LOL */
 class node{
 	node *left,*rght;
 	int l,r;

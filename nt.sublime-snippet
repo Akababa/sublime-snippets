@@ -8,14 +8,13 @@ ll powmod(ll a,ll b){
 ll inv(ll a){
 	return powmod(a,MOD-2);
 }
-ll nck(ll n,ll k){
-	if(k==0) return 1;
-	return nck(n-1,k-1)*n%MOD*inv(k)%MOD;
-}
-ll fact(ll n){
+ll fact(ll n,ll k=0){
 	ll ans=n;
-	while(n--) ans=ans*n%MOD;
+	while(--n >k) ans=ans*n%MOD;
 	return ans;
+}
+ll nck(ll n,ll k){
+	return fact(n,n-k)*inv(fact(k))%MOD;
 }
 map<ll,ll> fac(ll x){
 	map<ll,ll> fac;
